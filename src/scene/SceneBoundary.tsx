@@ -36,7 +36,7 @@ export const SceneBoundary: React.FC<SceneBoundaryProps> = ({
   const [state, setState] = useState<SceneLifecycleState>('poster');
   const [isIntersecting, setIsIntersecting] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retryCountRef = useRef<number>(0);
 
   const { labels } = portfolioContent;

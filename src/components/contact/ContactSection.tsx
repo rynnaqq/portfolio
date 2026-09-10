@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, ExternalLink as ExtLinkIcon } from 'lucide-react';
+import { ExternalLink as ExtLinkIcon } from 'lucide-react';
 import { portfolioContent } from '../../content/portfolio';
 import { SectionHeader } from '../common/SectionHeader';
 import { CopyEmailButton } from './CopyEmailButton';

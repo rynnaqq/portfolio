@@ -4,7 +4,7 @@ export type ClipboardStatus = 'idle' | 'copied' | 'error';
 
 export function useClipboard(timeout = 3000) {
   const [status, setStatus] = useState<ClipboardStatus>('idle');
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const copy = useCallback(
     async (text: string) => {

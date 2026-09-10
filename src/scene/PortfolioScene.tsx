@@ -54,7 +54,6 @@ const InteractiveGroup: React.FC<{
           invalidate();
         }}
         sceneBindings={portfolioContent.sceneBindings}
-        reducedMotion={reducedMotion}
       />
     </group>
   );

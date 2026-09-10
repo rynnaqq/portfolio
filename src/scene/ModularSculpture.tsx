@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import * as THREE from 'three';
 import { ThreeEvent } from '@react-three/fiber';
 import { isClickCandidate, Point } from './gestureUtils';
 import type { SceneBinding } from '../types/portfolio';
@@ -8,14 +7,12 @@ interface ModularSculptureProps {
   selectedProjectId: string;
   onSelectProject: (projectId: string) => void;
   sceneBindings: SceneBinding[];
-  reducedMotion?: boolean;
 }
 
 export const ModularSculpture: React.FC<ModularSculptureProps> = ({
   selectedProjectId,
   onSelectProject,
   sceneBindings,
-  reducedMotion = false,
 }) => {
   const pointerStartRef = useRef<Record<string, Point>>({});
   const [hoveredPart, setHoveredPart] = useState<string | null>(null);

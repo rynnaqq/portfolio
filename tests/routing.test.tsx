@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { HomePage } from '../src/pages/HomePage';
 import { ProjectDetailPage } from '../src/pages/ProjectDetailPage';

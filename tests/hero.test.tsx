@@ -1,10 +1,8 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { HeroSection } from '../src/components/hero/HeroSection';
 import { SceneControls } from '../src/components/hero/SceneControls';
-import { SelectedProjectPanel } from '../src/components/hero/SelectedProjectPanel';
 import { portfolioContent } from '../src/content/portfolio';
 
 describe('Hero Section & HTML Alternative Controls (PRD FR-02, FR-08, FR-09)', () => {

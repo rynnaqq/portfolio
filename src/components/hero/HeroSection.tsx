@@ -4,6 +4,7 @@ import { ArrowDown, Mail } from 'lucide-react';
 import { portfolioContent } from '../../content/portfolio';
 import { SelectedProjectPanel } from './SelectedProjectPanel';
 import { SceneControls } from './SceneControls';
+import { SceneBoundary } from '../../scene/SceneBoundary';
 
 interface HeroSectionProps {
   renderScene?: (props: {
@@ -106,17 +107,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ renderScene }) => {
                   setIsSceneReady,
                 })
               ) : (
-                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                  <div className="w-24 h-24 rounded-full border-4 border-cobalt bg-butter flex items-center justify-center mb-4 shadow-sm">
-                    <div className="w-8 h-8 bg-tomato rotate-45 border-2 border-text"></div>
-                  </div>
-                  <p className="text-sm font-display font-bold text-text mb-1">
-                    Patung Geometris Interaktif
-                  </p>
-                  <p className="text-xs font-body text-text-muted max-w-xs">
-                    {labels.rotateHint}
-                  </p>
-                </div>
+                <SceneBoundary
+                  selectedProjectId={selectedProjectId}
+                  onSelectProject={setSelectedProjectId}
+                  rotationTrigger={rotationTrigger}
+                  resetTrigger={resetTrigger}
+                  setIsSceneReady={setIsSceneReady}
+                />
               )}
             </div>
 

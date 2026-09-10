@@ -1,0 +1,33 @@
+:root {
+  /* Bauhaus x Memphis x Kawaii Design Tokens */
+  --color-bg: #F6F1E7;
+  --color-text: #242424;
+  --color-text-muted: #59554F;
+  --color-cobalt: #2146D9;
+  --color-tomato: #D83A2F;
+  --color-butter: #F2D45C;
+  --color-pink: #EFBFCB;
+  --color-mint: #B8D8C7;
+  --color-on-accent: #FFFFFF;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Layout */
+  --content-max-width: 1280px;
+  --border-structural: 2px solid var(--color-text);
+  --border-thin: 1px solid var(--color-text);
+}

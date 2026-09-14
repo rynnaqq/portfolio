@@ -1,150 +1,128 @@
-# Portofolio Profesional Interaktif (Bauhaus × Memphis × Kawaii)
+# ⚡ KAELEN VANCE // Futuristic Awwwards Creative Developer Portfolio
 
-Portofolio web profesional yang menggabungkan fondasi struktural **Bauhaus (~60%)**, aksen ritmis **Memphis (~25%)**, serta keramahan geometris **Kawaii (~15%)**. Dilengkapi patung 3D modular berbasis WebGL (Three.js & React Three Fiber) yang tersinkronisasi dua arah dengan kontrol HTML alternatif berkemampuan aksesibilitas penuh.
+An award-winning caliber, dark-luxury, cyber-minimalist developer portfolio and WebGL playground inspired by high-end design studios (Active Theory, Locomotive, Studio Freight).
 
-Proyek ini dibangun berdasarkan spesifikasi ketat pada [`PRD_Portofolio_Interaktif_Bauhaus_Memphis_Kawaii.md`](./PRD_Portofolio_Interaktif_Bauhaus_Memphis_Kawaii.md).
-
----
-
-## 🎨 Karakter Desain & Sistem Visual
-
-1. **Bauhaus (Fondasi ~60%):**
-   - Grid layout yang disiplin, border hitam tegas (`border-2 border-charcoal`), tipografi terstruktur (**Space Grotesk** untuk display dan **Inter** untuk keterbacaan teks panjang).
-   - Palet warna primer: warm ivory (`#F6F1E7`), charcoal (`#242424`), cobalt blue (`#2146D9`), tomato red (`#D83A2F`), dan butter yellow (`#F2D45C`).
-2. **Memphis (Aksen ~25%):**
-   - Hard drop shadow berjarak tegas (`shadow-[4px_4px_0px_#242424]`), garis tepi tebal, variasi ritmis kontras pada tombol aksi dan kartu proyek.
-3. **Kawaii (Detail ~15%):**
-   - Sudut melengkung halus (`rounded-2xl`, `rounded-full`), proporsi ramah, mikro-interaksi responsif tanpa gerakan liar atau animasi otomatis yang mengganggu.
-4. **Anti AI-Slop (PRD Bagian 15):**
-   - Bebas badge generik ("Premium Experience", "Verified Expert"), tanpa bar persentase keahlian fiktif ("React 98%"), tanpa testimoni/metrik rekaan, dan tanpa purplish glassmorphism/glow blur yang mengaburkan konten.
+![License](https://img.shields.io/badge/License-MIT-CCFF00?style=for-the-badge)
+![React](https://img.shields.io/badge/React-19.0-08080A?style=for-the-badge&logo=react)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3.4-00F0FF?style=for-the-badge&logo=tailwindcss)
+![ThreeJS](https://img.shields.io/badge/Three.js-WebGL2-7928CA?style=for-the-badge&logo=threedotjs)
 
 ---
 
-## 🛠️ Tech Stack
+## 🎨 Design System & Art Direction
 
-- **Framework & Core:** React 19, TypeScript (Strict Mode)
-- **Bundler & Tooling:** Vite 6, PostCSS, Tailwind CSS v3
-- **Routing:** React Router v7
-- **3D Graphics:** Three.js, `@react-three/fiber` (R3F), `@react-three/drei`
-- **Icons:** Lucide React
-- **Testing:** Vitest, `@testing-library/react`, `@testing-library/jest-dom`, JSDOM
+- **Aesthetic**: Dark Luxury / Cyber-Minimalist / Neo-Brutalist Awwwards style
+- **Color Palette**:
+  - `OLED Black` (`#08080A`): Pure deep background
+  - `Dark Zinc Surface` (`#121216`): Layered frosted cards with `rgba(255, 255, 255, 0.08)` borders
+  - `Electric Neon Lime` (`#CCFF00`): Primary energy accent & hover states
+  - `Cyber Purple & Blue` (`#7928CA` → `#0070F3` → `#00F0FF`): Ambient volumetric glow gradients
+- **Typography**:
+  - Display / Hero: Oversized kinetic headline typography (`Syne` / `Space Grotesk`)
+  - Body & Micro-copy: Monospace & Neo-Grotesque (`JetBrains Mono` / `Plus Jakarta Sans`)
 
 ---
 
-## 🚀 Memulai Proyek
+## ⚡ Interactive Micro-Interactions & Features
 
-### Kebutuhan Sistem
-- Node.js versi 18+ (atau LTS terbaru)
-- npm versi 9+
+1. **Custom Inertial Cursor**:
+   - Dynamic trailing aura + precision dot
+   - Context-aware hover tags (`VIEW //`, `ROTATE`, magnetic button snap)
+   - Automatic touch-device fallback (disables cursor cleanly on mobile/tablets)
 
-### Instalasi & Menjalankan Development Server
+2. **Magnetic Snapping Elements**:
+   - CTA buttons and navigation items calculate physics distance from the cursor and snap toward it with spring dynamics.
+
+3. **Three.js WebGL Interactive 3D Canvas**:
+   - Interactive glossy Icosahedron sculpture enclosed in a pulsing neon wireframe cage, orbiting rings, and 750 additive blending particles.
+   - Real-time mouse inertia tracking and drag-to-rotate physics.
+   - Interactive Mode Switcher: **HYBRID**, **MESH**, and **FLUID** particle mode.
+   - Power & battery optimization: GPU render loop automatically pauses when scrolled off-screen via `IntersectionObserver`.
+
+4. **Procedural Web Audio Synthesizer**:
+   - Zero-dependency, pure procedural Web Audio API sound engine providing tactile cyber clicks, harmonic chords, and subtle hums on user interaction.
+   - Polite by default (muted with a clean 1-click audio toggle in the floating navbar).
+
+5. **Glassmorphic Floating Navigation & Mobile Drawer**:
+   - Responsive pill navbar with live section scroll-spy indicator.
+   - Pulsating green "Available for Work" badge.
+   - Fullscreen animated mobile navigation drawer with staggered entrance.
+
+6. **Interactive Developer CLI Terminal**:
+   - Embedded interactive terminal emulator in the contact section.
+   - Commands: `help`, `about`, `skills`, `projects`, `contact`, `hire`, `matrix`, `whoami`, `clear`.
+   - Realistic keystroke sound synthesizer and auto-scroll history.
+
+7. **Project Lightbox / Case Study Modal**:
+   - High-impact asymmetric gallery showcase.
+   - Expandable modal with interactive image gallery, architectural challenges, engineering solutions, and live performance metrics.
+
+8. **Ultra-Minimal One-Line Luxury Footer**:
+   - Coordinates, dynamic current year, live system status, and magnetic "Back to Top" button.
+
+---
+
+## 🛠 Tech Stack
+
+- **Framework**: React 19 (Modern Hooks & Functional Architecture)
+- **Styling**: Tailwind CSS with custom cyber tokens, glassmorphism, noise overlays, and scanline grids
+- **Animation**: Framer Motion (spring physics, layout transitions, drag interactions)
+- **3D & Graphics**: Three.js (WebGL2, custom geometries, point lights, particle systems)
+- **Icons**: Lucide React + custom SVG brand icons
+
+---
+
+## 🚀 Getting Started
+
+### 1. Install Dependencies
 ```bash
-# Instal dependensi
 npm install
+```
 
-# Jalankan dev server lokal (dengan Hot Module Replacement)
+### 2. Start Development Server
+```bash
 npm run dev
 ```
-Buka browser di `http://localhost:5173`.
 
-### Pengujian & Validasi
+### 3. Build for Production
 ```bash
-# Jalankan seluruh unit dan integration test (Vitest)
-npm test
-
-# Jalankan pemeriksaan tipe statis TypeScript (strict)
-npm run typecheck
-
-# Jalankan production build Vite (minifikasi, chunking, & CSS tree-shaking)
 npm run build
+```
 
-# Pratinjau hasil build lokal
+### 4. Preview Production Build
+```bash
 npm run preview
 ```
 
 ---
 
-## 📦 Anggaran Bundle & Optimasi Performa
+## 📁 Architecture Directory Structure
 
-Berdasarkan target Bagian 12 PRD, bundle JavaScript dibagi secara modular melalui `vite.config.ts`:
-- **Initial JS Chunk:** `~28.44 KiB gzip` (Target PRD: `<= 200 KiB gzip`) ✅
-- **Three.js Vendor Chunk:** `~302.74 KiB gzip` (Target PRD: `<= 450 KiB gzip`) ✅
-- **Frameloop On-Demand:** Render WebGL hanya dipicu saat terjadi interaksi atau perubahan state (`frameloop="demand"`), menghemat baterai perangkat mobile dan mencegah pemanasan CPU/GPU saat diam.
-- **Gesture Threshold:** Ambang batas 8px memisahkan swipe/rotasi kamera dari klik pemilihan proyek, didukung `touch-action: pan-y pinch-zoom` untuk kenyamanan scroll vertikal pada smartphone.
-
----
-
-## 📝 Panduan Pengelolaan Konten & Publikasi
-
-Seluruh data portofolio diisolasi pada satu sumber data bertipe: [`src/content/portfolio.ts`](./src/content/portfolio.ts).
-
-### 1. Mode Saat Ini (`preview`)
-Aplikasi saat ini berjalan dalam mode `'preview'`, yang memungkinkan pengembangan antarmuka dan interaksi 3D dengan penanda placeholder transparan (`[JUDUL ...]`, `[BIO ...]`, dsb.).
-
-### 2. Beralih ke Mode Produksi (`production`)
-Ketika pemilik portofolio siap merilis portofolio dengan data riil:
-1. Buka file [`src/content/portfolio.ts`](./src/content/portfolio.ts).
-2. Isi identitas pemilik: `name`, `title`, `heroDescription`, `bio`, `approach`, `email`, dan tautan sosial.
-3. Masukkan 3–4 proyek riil dengan struktur lengkap:
-   - `id`, `slug`, `title`, `year`, `role`, `summary`, `problem`, `solution`, `architecture`, `impact`, `metrics`, dan `visual`.
-4. Sesuaikan kelompok keahlian (`skills`) dengan kategori dan contoh aplikasi nyata.
-5. Ubah konfigurasi `mode`:
-   ```typescript
-   export const portfolioContent: PortfolioContent = {
-     mode: 'production', // Ubah dari 'preview' ke 'production'
-     // ...
-   };
-   ```
-6. Jalankan pengujian dan validasi:
-   ```bash
-   npm test
-   npm run build
-   ```
-   *Validator (`src/content/validator.ts`) secara otomatis memverifikasi bahwa tidak ada lagi string placeholder (`[PLACEHOLDER]`, `[JUDUL]`, dll.), email valid, dan tidak ada route studi kasus yang rusak.*
-
----
-
-## ♿ Aksesibilitas (WCAG 2.2 AA)
-
-- **Skip to Content:** Tautan pintas navigasi keyboard langsung ke `#main-content`.
-- **Alternative Controls:** Kontrol proyek HTML lengkap berbentuk radio group `<fieldset>` dan `<legend>`, tombol rotasi step 15°, serta tombol reset rotasi patung.
-- **Copy Email Notification:** Notifikasi status penyalinan email ke clipboard menggunakan `aria-live="polite"`, dengan pesan fallback instruksi salin manual jika izin clipboard ditolak.
-- **Reduced Motion:** Mendeteksi `prefers-reduced-motion: reduce` secara otomatis untuk menonaktifkan transisi/animasi gerak berlebih tanpa mengurangi fungsionalitas.
-- **WebGL Fallback:** Jika WebGL tidak didukung atau terjadi kegagalan context, fallback SVG poster dan tombol coba lagi tetap menjaga kelengkapan informasi portofolio.
-
----
-
-## 📂 Struktur Direktori
-
-```text
-portofolio/
-├── docs/                      # Dokumentasi teknis, spek, rencana implementasi & QA report
-├── public/                    # Aset statis & SVG poster fallback
-├── src/
-│   ├── components/            # Komponen antarmuka React
-│   │   ├── about/             # Seksi profil & kelompok keahlian
-│   │   ├── common/            # Tombol, header seksi, skip link, visually hidden
-│   │   ├── contact/           # Seksi kontak & copy email button
-│   │   ├── hero/              # Hero layout, panel proyek terpilih, kontrol HTML
-│   │   ├── layout/            # SiteHeader, MobileNav, Footer, AppShell
-│   │   └── work/              # Daftar kartu proyek pilihan
-│   ├── content/               # Sumber konten portofolio & validator
-│   ├── hooks/                 # Custom hooks (useClipboard, useReducedMotion)
-│   ├── pages/                 # Halaman aplikasi (HomePage, ProjectDetailPage, NotFoundPage)
-│   ├── scene/                 # Komponen 3D Three.js/R3F, gesture utils, fallback boundary
-│   ├── styles/                # Token desain CSS & Tailwind directives
-│   ├── types/                 # Definisi tipe TypeScript
-│   ├── App.tsx                # Komponen akar & router
-│   └── main.tsx               # Titik masuk aplikasi
-├── tests/                     # Suite pengujian otomatis Vitest & Testing Library
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-└── vite.config.ts
 ```
-
----
-
-## 📄 Lisensi
-
-Hak Cipta © 2026. Seluruh hak cipta dilindungi.
+├── src/
+│   ├── components/
+│   │   ├── About.jsx              # Bento-grid narrative, live FPS meter & stat counters
+│   │   ├── CustomCursor.jsx       # Trailing glow & dot cursor with touch detection
+│   │   ├── Footer.jsx             # Ultra-minimal footer with coordinates & back-to-top
+│   │   ├── Hero.jsx               # Kinetic headline, status telemetry, marquee ticker
+│   │   ├── Icons.jsx              # Clean brand SVG icons (GitHub, X, LinkedIn, Discord)
+│   │   ├── InteractiveCanvas.jsx  # Three.js 3D kinetic mesh, particles, mouse physics
+│   │   ├── Magnetic.jsx           # Spring-physics magnetic hover wrapper
+│   │   ├── Navbar.jsx             # Glassmorphic pill header with audio & mobile drawer
+│   │   ├── ProjectModal.jsx       # Deep-dive case study modal & gallery carousel
+│   │   ├── Projects.jsx           # Asymmetric flagship project showcase
+│   │   ├── TechStack.jsx          # Interactive capability matrix & glowing filter pills
+│   │   └── TerminalContact.jsx    # Glassmorphic contact form + CLI terminal simulator
+│   ├── data/
+│   │   ├── portfolioData.js       # Bio, stats, philosophy, socials, and coordinates
+│   │   ├── projectsData.js        # Detailed flagship case studies with metrics
+│   │   └── skillsData.js          # Categorized stack with proficiency indicators
+│   ├── utils/
+│   │   └── sound.js               # Web Audio API procedural sound synthesizer
+│   ├── App.jsx                    # Root layout with scroll-spy orchestration
+│   ├── index.css                  # Custom cyber utilities, grain, glassmorphism
+│   └── main.jsx                   # Entry point
+├── index.html                     # Google Fonts (Syne, Space Grotesk, JetBrains Mono)
+├── tailwind.config.js             # Dark luxury OLED palette, custom neon glows & animations
+└── vite.config.js                 # Vite production configuration
+```

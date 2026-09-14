@@ -23,8 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Agent & Skill caches
+# Agents & AI cache
 .agents
-.opencode
-awesome-codex-skills
-.superpowers
+

@@ -163,18 +163,18 @@ export default function About() {
           </Card3D>
 
           {/* Cards 3 - 6: Metrics & Stat Counters (2x2 grid on mobile, 4 columns on desktop) */}
-          <div className="md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="md:col-span-12 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {portfolioData.stats.map((stat, index) => (
               <Card3D
                 key={index}
                 maxRotation={8}
-                className="h-full p-5 sm:p-7 rounded-2xl bg-surface-card/80 backdrop-blur-xl border border-white/10 hover:border-neon-lime/40 transition-all group shadow-glow-card"
+                className="h-full p-4 xs:p-5 sm:p-7 rounded-2xl bg-surface-card/80 backdrop-blur-xl border border-white/10 hover:border-neon-lime/40 transition-all group shadow-glow-card"
               >
-                <span className="font-mono text-[10px] sm:text-xs text-zinc-500 block mb-1.5 sm:mb-2">// METRIC_0{index + 1}</span>
-                <div className="font-display text-3xl sm:text-4xl md:text-5xl font-black text-white group-hover:text-neon-lime transition-colors">
+                <span className="font-mono text-[9px] sm:text-xs text-zinc-500 block mb-1 sm:mb-2">// METRIC_0{index + 1}</span>
+                <div className="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black text-white group-hover:text-neon-lime transition-colors">
                   {stat.value}
                 </div>
-                <div className="font-mono text-[11px] sm:text-xs font-semibold text-zinc-200 mt-1.5 sm:mt-2 uppercase tracking-wide">
+                <div className="font-mono text-[10px] sm:text-xs font-semibold text-zinc-200 mt-1 sm:mt-2 uppercase tracking-wide">
                   {stat.label}
                 </div>
                 <p className="text-[10px] sm:text-xs text-zinc-500 mt-1 leading-relaxed">{stat.detail}</p>

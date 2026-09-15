@@ -60,8 +60,8 @@ export default function Projects() {
                   data-cursor-project="true"
                   className={`relative overflow-hidden cursor-pointer bg-zinc-950 ${
                     index === 0
-                      ? 'aspect-[16/10] sm:aspect-[21/9] min-h-[220px] sm:min-h-[320px] md:min-h-[420px]'
-                      : 'aspect-[16/10] min-h-[200px] sm:min-h-[280px]'
+                      ? 'aspect-[16/10] sm:aspect-[21/9] min-h-[240px] sm:min-h-[320px] md:min-h-[420px]'
+                      : 'aspect-[16/10] min-h-[220px] sm:min-h-[280px]'
                   }`}
                 >
                   <img
@@ -72,11 +72,11 @@ export default function Projects() {
                   />
 
                   {/* Dark Vignette Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-surface-card via-surface-card/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-surface-card via-surface-card/45 to-transparent" />
 
                   {/* Badges Overlay */}
                   <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 flex items-center justify-between pointer-events-none">
-                    <span className="font-mono text-[10px] sm:text-[11px] px-2.5 sm:px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-white/10 text-zinc-300">
+                    <span className="font-mono text-[10px] sm:text-[11px] px-2.5 sm:px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10 text-zinc-300">
                       {project.category}
                     </span>
 
@@ -89,12 +89,12 @@ export default function Projects() {
                   </div>
 
                   {/* Bottom Overlay Info on Image */}
-                  <div className="absolute bottom-3 sm:bottom-4 left-4 sm:left-6 right-4 sm:right-6 flex items-end justify-between pointer-events-none">
+                  <div className="absolute bottom-3 sm:bottom-4 left-3.5 sm:left-6 right-3.5 sm:right-6 flex items-end justify-between pointer-events-none">
                     <div>
-                      <span className="font-mono text-[11px] sm:text-xs text-neon-lime font-semibold tracking-wider">
+                      <span className="font-mono text-[10px] sm:text-xs text-neon-lime font-semibold tracking-wider">
                         {project.year} // {project.role}
                       </span>
-                      <h3 className="font-display text-xl sm:text-3xl md:text-4xl font-extrabold text-white mt-0.5 sm:mt-1">
+                      <h3 className="font-display text-lg xs:text-xl sm:text-3xl md:text-4xl font-extrabold text-white mt-0.5 sm:mt-1 leading-snug">
                         {project.title}
                       </h3>
                     </div>
@@ -106,13 +106,13 @@ export default function Projects() {
                 </div>
 
                 {/* Card Footer Content */}
-                <div className="p-5 sm:p-8 flex flex-col justify-between flex-grow">
-                  <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-5 sm:mb-6 font-normal">
+                <div className="p-4 xs:p-5 sm:p-8 flex flex-col justify-between flex-grow">
+                  <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-4 sm:mb-6 font-normal">
                     {project.description}
                   </p>
 
                   {/* Metrics Pill Grid */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-5 sm:mb-6 p-2.5 sm:p-3 rounded-xl bg-oled/60 border border-white/5">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4 sm:mb-6 p-2.5 sm:p-3 rounded-xl bg-oled/60 border border-white/5">
                     {project.metrics.map((m, i) => (
                       <div key={i} className="text-left px-1.5 sm:px-2">
                         <div className="text-[9px] sm:text-[10px] font-mono text-zinc-500 uppercase">{m.label}</div>
@@ -124,7 +124,7 @@ export default function Projects() {
                   </div>
 
                   {/* Tech Tags & Actions */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-4 border-t border-white/5">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-white/5">
                     <div className="flex flex-wrap gap-1.5 sm:gap-2">
                       {project.tech.map((t) => (
                         <span
@@ -136,13 +136,13 @@ export default function Projects() {
                       ))}
                     </div>
 
-                    <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0">
+                    <div className="flex items-center justify-between sm:justify-end gap-2.5 pt-2 sm:pt-0 w-full sm:w-auto">
                       {project.githubUrl && (
                         <a
                           href={project.githubUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-2 sm:p-2.5 rounded-full bg-surface-200 border border-white/10 text-zinc-400 hover:text-white hover:border-white/25 transition-all"
+                          className="p-2 sm:p-2.5 rounded-full bg-surface-200 border border-white/10 text-zinc-400 hover:text-white hover:border-white/25 transition-all shrink-0"
                           title="View Source Code"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -153,10 +153,10 @@ export default function Projects() {
                         </a>
                       )}
 
-                      <Magnetic strength={0.3} className="w-full sm:w-auto">
+                      <Magnetic strength={0.3} className="flex-1 sm:flex-initial">
                         <button
                           onClick={() => handleOpenProject(project)}
-                          className="w-full sm:w-auto px-4 py-2 rounded-full bg-surface-200 border border-white/10 text-white font-mono text-xs hover:border-neon-lime hover:text-neon-lime transition-all flex items-center justify-center gap-1.5"
+                          className="w-full sm:w-auto px-4 py-2 rounded-full bg-surface-200 border border-white/10 text-white font-mono text-xs hover:border-neon-lime hover:text-neon-lime transition-all flex items-center justify-center gap-1.5 active:scale-98"
                         >
                           <span>CASE STUDY</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />

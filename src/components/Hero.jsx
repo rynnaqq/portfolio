@@ -55,7 +55,7 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentG
   };
 
   return (
-    <section id="hero" className="relative min-h-[92vh] sm:min-h-screen pt-20 sm:pt-28 pb-10 sm:pb-16 flex flex-col justify-between overflow-hidden">
+    <section id="hero" className="relative min-h-[100dvh] pt-24 sm:pt-32 pb-6 sm:pb-12 flex flex-col justify-between overflow-hidden">
       {/* Background Ambient Glows */}
       <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[550px] sm:w-[800px] h-[400px] sm:h-[500px] bg-gradient-to-b from-neon-purple/20 via-neon-blue/10 to-transparent blur-[120px] sm:blur-[140px] rounded-full opacity-70" />
       <div className="pointer-events-none absolute top-1/3 -left-40 w-[280px] sm:w-[450px] h-[280px] sm:h-[450px] bg-neon-lime/10 blur-[100px] sm:blur-[130px] rounded-full" />
@@ -101,7 +101,7 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentG
               </div>
 
               {/* Kinetic Massive Typography with Responsive Clamping & Scramble */}
-              <h1 className="font-display text-4xl xs:text-5xl sm:text-6xl md:text-7xl xl:text-8xl font-black uppercase tracking-tighter leading-[0.92] text-white break-words">
+              <h1 className="font-display text-3xl xs:text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-black uppercase tracking-tighter leading-[0.92] text-white break-words">
                 <TextScramble text="SCULPTING" /> <br />
                 <span className="gradient-headline">DIGITAL</span> <br />
                 <span className="relative inline-block">
@@ -130,13 +130,13 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentG
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-wrap items-center gap-3 sm:gap-4 pt-1 sm:pt-2"
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2 w-full"
             >
               {/* Primary CTA */}
-              <Magnetic strength={0.3} className="w-full xs:w-auto">
+              <Magnetic strength={0.3} className="w-full sm:w-auto">
                 <button
                   onClick={() => scrollToSection('projects')}
-                  className="w-full xs:w-auto group relative px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-neon-lime text-black font-mono text-xs sm:text-sm font-bold tracking-wider hover:shadow-neon-lime-lg transition-all duration-300 flex items-center justify-center gap-2.5 sm:gap-3"
+                  className="w-full sm:w-auto group relative px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-neon-lime text-black font-mono text-xs sm:text-sm font-bold tracking-wider hover:shadow-neon-lime-lg transition-all duration-300 flex items-center justify-center gap-2.5 sm:gap-3"
                 >
                   <span>EXPLORE PROJECTS</span>
                   <ArrowDownRight className="w-4 h-4 transition-transform group-hover:translate-x-1 group-hover:translate-y-1" />
@@ -144,10 +144,10 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentG
               </Magnetic>
 
               {/* Secondary CTA */}
-              <Magnetic strength={0.25} className="w-full xs:w-auto">
+              <Magnetic strength={0.25} className="w-full sm:w-auto">
                 <button
                   onClick={() => scrollToSection('contact')}
-                  className="w-full xs:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-surface-card/80 backdrop-blur-md border border-white/10 hover:border-neon-lime text-white font-mono text-xs sm:text-sm tracking-wider transition-all duration-300 hover:bg-white/5 flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-full bg-surface-card/80 backdrop-blur-md border border-white/10 hover:border-neon-lime text-white font-mono text-xs sm:text-sm tracking-wider transition-all duration-300 hover:bg-white/5 flex items-center justify-center gap-2"
                 >
                   <span>INITIATE CONTACT</span>
                 </button>
@@ -169,40 +169,59 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentG
                 </Magnetic>
               )}
             </motion.div>
+
+            {/* Mobile Spatial Core Telemetry & Quick Action Bar (Mobile Only) */}
+            <div className="lg:hidden flex flex-wrap items-center justify-between gap-2 pt-2 font-mono text-[10px] text-zinc-400">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-card/85 backdrop-blur-md border border-white/10">
+                <span className="w-1.5 h-1.5 rounded-full bg-neon-lime animate-ping" />
+                <span className="text-zinc-300">CORE: <span className="text-neon-lime uppercase">{currentGeometry}</span></span>
+                <span className="text-zinc-600">|</span>
+                <span>ROT {telemetry.rot}°</span>
+              </div>
+
+              <button
+                onClick={cycleShape}
+                className="px-3 py-1.5 rounded-full bg-surface-card/85 backdrop-blur-md border border-neon-lime/40 text-neon-lime flex items-center gap-1.5 active:scale-95 transition-all shadow-sm"
+                title="Morph 3D Geometry"
+              >
+                <Shapes className="w-3 h-3 text-neon-lime" />
+                <span className="font-bold">MORPH SHAPE</span>
+              </button>
+            </div>
           </div>
 
-          {/* Right Column: Spatial 3D HUD Reticle & Interactive Telemetry */}
-          <div className="lg:col-span-5 relative h-[260px] xs:h-[300px] sm:h-[400px] lg:h-[480px] flex items-center justify-center pointer-events-none">
+          {/* Right Column: Spatial 3D HUD Reticle & Interactive Telemetry (Desktop Only) */}
+          <div className="hidden lg:flex lg:col-span-5 relative h-[480px] items-center justify-center pointer-events-none">
             {/* Ethereal Circular Targeting HUD */}
-            <div className="relative w-52 h-52 xs:w-64 xs:h-64 sm:w-80 sm:h-80 rounded-full border border-white/10 flex items-center justify-center animate-spin-slow">
+            <div className="relative w-72 h-72 sm:w-80 sm:h-80 rounded-full border border-white/10 flex items-center justify-center animate-spin-slow">
               <div className="absolute inset-2 rounded-full border border-dashed border-white/15" />
-              <div className="absolute inset-6 sm:inset-8 rounded-full border border-neon-lime/20" />
+              <div className="absolute inset-8 rounded-full border border-neon-lime/20" />
               
               {/* Cardinal Reticle Ticks */}
-              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-3 sm:h-4 bg-neon-lime" />
-              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-3 sm:h-4 bg-neon-lime" />
-              <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 sm:w-4 h-1 bg-neon-lime" />
-              <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 sm:w-4 h-1 bg-neon-lime" />
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-1 h-4 bg-neon-lime" />
+              <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-4 bg-neon-lime" />
+              <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-4 h-1 bg-neon-lime" />
+              <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-4 h-1 bg-neon-lime" />
             </div>
 
             {/* Spatial Telemetry Floating Badges */}
-            <div className="absolute top-2 sm:top-4 right-2 sm:right-4 pointer-events-auto flex flex-col gap-1.5 font-mono text-[10px] sm:text-[11px]">
-              <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-white/10 text-zinc-300 flex items-center gap-1.5">
-                <Orbit className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-neon-lime animate-spin" />
+            <div className="absolute top-4 right-4 pointer-events-auto flex flex-col gap-1.5 font-mono text-[11px]">
+              <div className="px-3 py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-white/10 text-zinc-300 flex items-center gap-1.5">
+                <Orbit className="w-3.5 h-3.5 text-neon-lime animate-spin" />
                 <span>ROT: {telemetry.rot}°</span>
               </div>
               <button
                 onClick={cycleShape}
-                className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-neon-lime/30 text-neon-lime flex items-center gap-1.5 hover:bg-neon-lime hover:text-black transition-all"
+                className="px-3 py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-neon-lime/30 text-neon-lime flex items-center gap-1.5 hover:bg-neon-lime hover:text-black transition-all"
                 title="Morph 3D Model Shape"
               >
                 <Shapes className="w-3 h-3" />
-                <span className="uppercase text-[9px] sm:text-[10px]">MORPH SHAPE</span>
+                <span className="uppercase text-[10px]">MORPH SHAPE</span>
               </button>
             </div>
 
-            <div className="absolute bottom-2 sm:bottom-6 left-2 sm:left-6 pointer-events-auto">
-              <div className="px-3 py-1.5 sm:py-2 rounded-full bg-oled/85 backdrop-blur-xl border border-neon-lime/30 font-mono text-[9px] sm:text-[10px] text-neon-lime flex items-center gap-1.5 shadow-neon-lime">
+            <div className="absolute bottom-6 left-6 pointer-events-auto">
+              <div className="px-3 py-2 rounded-full bg-oled/85 backdrop-blur-xl border border-neon-lime/30 font-mono text-[10px] text-neon-lime flex items-center gap-1.5 shadow-neon-lime">
                 <span className="w-1.5 h-1.5 rounded-full bg-neon-lime animate-ping" />
                 <span>TOUCH / SWIPE 3D MODEL</span>
               </div>

@@ -288,17 +288,45 @@ export default function Navbar({ activeSection, onOpenTerminal, themeAccent, onT
             </nav>
 
             {/* Bottom Actions inside drawer */}
-            <div className="space-y-4 pt-4 border-t border-white/10">
-              <div className="p-3.5 rounded-2xl bg-surface-card border border-white/10 flex items-center justify-between">
+            <div className="space-y-3.5 pt-4 border-t border-white/10 pb-[calc(1.5rem+env(safe-area-inset-bottom))]">
+              {/* Theme Color Selector inside Drawer */}
+              <div className="p-3 rounded-2xl bg-surface-card border border-white/10 flex items-center justify-between">
+                <span className="font-mono text-xs text-zinc-400">THEME ACCENT:</span>
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-neon-lime animate-ping" />
-                  <span className="font-mono text-xs text-zinc-300">Available for Contract Work</span>
+                  {themes.map((t) => (
+                    <button
+                      key={t.name}
+                      onClick={() => {
+                        sound.playClick();
+                        if (onThemeChange) onThemeChange(t.color);
+                      }}
+                      className={`w-6 h-6 rounded-full border transition-all ${
+                        themeAccent === t.color ? 'border-white scale-110 shadow-sm' : 'border-transparent opacity-70'
+                      }`}
+                      style={{ backgroundColor: t.color }}
+                      title={t.name}
+                    />
+                  ))}
                 </div>
-                <span className="font-mono text-xs text-neon-lime">2025/2026</span>
               </div>
 
+              {/* Mobile CLI Launch */}
+              {onOpenTerminal && (
+                <button
+                  onClick={() => {
+                    sound.playClick();
+                    setIsMobileMenuOpen(false);
+                    onOpenTerminal();
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-surface-200 border border-white/10 text-zinc-300 hover:text-neon-lime flex items-center justify-center gap-2 font-mono text-xs transition-all active:scale-98"
+                >
+                  <Terminal className="w-3.5 h-3.5 text-neon-lime" />
+                  <span>OPEN VIRTUAL CLI TERMINAL</span>
+                </button>
+              )}
+
               {/* Social Channels in Drawer */}
-              <div className="flex items-center justify-center gap-4 py-2 text-zinc-400">
+              <div className="flex items-center justify-center gap-4 py-1 text-zinc-400">
                 <a href={portfolioData.socials.github} target="_blank" rel="noreferrer" className="p-2.5 rounded-full bg-surface-200 border border-white/10">
                   <GithubIcon className="w-4 h-4" />
                 </a>
@@ -313,7 +341,7 @@ export default function Navbar({ activeSection, onOpenTerminal, themeAccent, onT
               <a
                 href="#contact"
                 onClick={(e) => handleNavClick(e, '#contact')}
-                className="w-full py-3.5 rounded-xl bg-neon-lime text-black font-mono font-bold text-center flex items-center justify-center gap-2 shadow-neon-lime"
+                className="w-full py-3.5 rounded-xl bg-neon-lime text-black font-mono font-bold text-center flex items-center justify-center gap-2 shadow-neon-lime active:scale-98"
               >
                 <span>INITIATE CONTACT</span>
                 <ArrowUpRight className="w-4 h-4" />

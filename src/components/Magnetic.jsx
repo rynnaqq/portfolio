@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { sound } from '../utils/sound';
 
@@ -12,9 +12,16 @@ export default function Magnetic({
 }) {
   const ref = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsTouchDevice(window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window);
+    }
+  }, []);
 
   const handleMouseMove = (e) => {
-    if (!ref.current) return;
+    if (isTouchDevice || !ref.current) return;
     const { clientX, clientY } = e;
     const { left, top, width, height } = ref.current.getBoundingClientRect();
 
@@ -29,6 +36,7 @@ export default function Magnetic({
   };
 
   const handleMouseLeave = () => {
+    if (isTouchDevice) return;
     setPosition({ x: 0, y: 0 });
   };
 
@@ -42,6 +50,8 @@ export default function Magnetic({
     if (onClick) onClick(e);
   };
 
+  const isFullWidth = className.includes('w-full');
+
   return (
     <motion.div
       ref={ref}
@@ -49,9 +59,9 @@ export default function Magnetic({
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
       onClick={handleClick}
-      animate={{ x: position.x, y: position.y }}
+      animate={isTouchDevice ? {} : { x: position.x, y: position.y }}
       transition={{ type: 'spring', stiffness: 250, damping: 15, mass: 0.2 }}
-      className={`inline-block ${className}`}
+      className={`${isFullWidth ? 'flex' : 'inline-block'} ${className}`}
       data-cursor-magnetic="true"
       {...props}
     >

@@ -83,8 +83,17 @@ export default function MiniModelViewer({ title = "KINETIC_CORE_PROTOTYPE" }) {
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       const deltaX = clientX - prevPointer.x;
       const deltaY = clientY - prevPointer.y;
+
+      // On touch devices, if vertical scroll is dominant, release dragging so page scrolls smoothly
+      if (e.touches && Math.abs(deltaY) > Math.abs(deltaX) * 1.1) {
+        isDragging = false;
+        return;
+      }
+
       mesh.rotation.y += deltaX * 0.015;
-      mesh.rotation.x += deltaY * 0.015;
+      if (!e.touches) {
+        mesh.rotation.x += deltaY * 0.015;
+      }
       wireMesh.rotation.y = mesh.rotation.y;
       wireMesh.rotation.x = mesh.rotation.x;
       prevPointer = { x: clientX, y: clientY };
@@ -152,13 +161,13 @@ export default function MiniModelViewer({ title = "KINETIC_CORE_PROTOTYPE" }) {
           <RotateCw className="w-3 h-3 animate-spin" />
           <span>{title}</span>
         </span>
-        <span className="text-zinc-500">TOUCH / DRAG TO INSPECT</span>
+        <span className="text-zinc-500">DRAG ↔ TO ROTATE</span>
       </div>
 
       {/* 3D Canvas Mount Area */}
       <div
         ref={mountRef}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: 'pan-y' }}
         className="w-full h-36 sm:h-44 cursor-grab active:cursor-grabbing flex items-center justify-center relative select-none"
       />
 

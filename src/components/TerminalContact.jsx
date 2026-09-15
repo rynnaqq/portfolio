@@ -223,7 +223,7 @@ export default function TerminalContact({ terminalRefFromParent, onTriggerWarp }
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Elena Rostova // NextWave Labs"
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-sm sm:text-base focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-base sm:text-sm focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
                     />
                   </div>
 
@@ -237,7 +237,7 @@ export default function TerminalContact({ terminalRefFromParent, onTriggerWarp }
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="e.g. elena@nextwave.io"
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-sm sm:text-base focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-base sm:text-sm focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
                     />
                   </div>
 
@@ -248,7 +248,7 @@ export default function TerminalContact({ terminalRefFromParent, onTriggerWarp }
                     <select
                       value={formData.budget}
                       onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-mono text-xs sm:text-sm focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-mono text-base sm:text-sm focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors"
                     >
                       <option value="$10k - $25k">$10k – $25k (Sprint / Feature)</option>
                       <option value="$25k - $50k">$25k – $50k (Full Product / WebGL)</option>
@@ -267,7 +267,7 @@ export default function TerminalContact({ terminalRefFromParent, onTriggerWarp }
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Detail your technical challenges, architecture requirements, or creative goals..."
-                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-sm sm:text-base focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors resize-none"
+                      className="w-full px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-oled/80 border border-white/10 text-white font-sans text-base sm:text-sm focus:outline-none focus:border-neon-lime focus:ring-1 focus:ring-neon-lime transition-colors resize-none"
                     />
                   </div>
 
@@ -370,19 +370,19 @@ export default function TerminalContact({ terminalRefFromParent, onTriggerWarp }
                       setTerminalInput(e.target.value);
                     }}
                     placeholder='type "help", "skills", or "matrix"...'
-                    className="flex-1 bg-transparent text-white font-mono text-xs focus:outline-none placeholder-zinc-600"
+                    className="flex-1 bg-transparent text-white font-mono text-base sm:text-xs focus:outline-none placeholder-zinc-600"
                   />
                 </form>
               </div>
 
               {/* Terminal Quick Tap Hint Chips (Thumb-Friendly on Phone) */}
-              <div className="px-3.5 sm:px-4 py-2 sm:py-2.5 bg-surface-card/60 border-t border-white/5 flex items-center gap-1.5 overflow-x-auto font-mono text-[10px] sm:text-[11px] text-zinc-500 scrollbar-none">
+              <div className="px-3.5 sm:px-4 py-2 sm:py-2.5 bg-surface-card/60 border-t border-white/5 flex items-center gap-1.5 overflow-x-auto font-mono text-[10px] sm:text-[11px] text-zinc-500 scrollbar-none overscroll-x-contain">
                 <span className="shrink-0">RUN:</span>
                 {['help', 'skills', '3d', 'matrix', 'warp', 'clear'].map((cmd) => (
                   <button
                     key={cmd}
                     onClick={() => executeCommand(cmd)}
-                    className="px-2 py-0.5 rounded bg-surface-200/90 border border-white/5 hover:border-neon-lime text-zinc-400 hover:text-neon-lime transition-all shrink-0 active:scale-95"
+                    className="px-2.5 py-1 rounded bg-surface-200/90 border border-white/5 hover:border-neon-lime text-zinc-400 hover:text-neon-lime transition-all shrink-0 active:scale-95 text-[10px] sm:text-[11px]"
                   >
                     {cmd}
                   </button>

@@ -250,8 +250,10 @@ export default function GlobalCanvas3D({
     let isTouching = false;
     let touchStartX = 0;
     let touchStartY = 0;
-    let touchDeltaX = 0;
-    let touchDeltaY = 0;
+    let targetTouchRotX = 0;
+    let targetTouchRotY = 0;
+    let smoothedTouchRotX = 0;
+    let smoothedTouchRotY = 0;
 
     const handleMouseMove = (e) => {
       targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
@@ -272,11 +274,19 @@ export default function GlobalCanvas3D({
 
     const handleTouchMove = (e) => {
       if (!isTouching || e.touches.length !== 1) return;
-      touchDeltaX = (e.touches[0].clientX - touchStartX) * 0.005;
-      touchDeltaY = (e.touches[0].clientY - touchStartY) * 0.005;
+      const curX = e.touches[0].clientX;
+      const curY = e.touches[0].clientY;
+      const dx = curX - touchStartX;
+      const dy = curY - touchStartY;
 
-      targetMouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
-      targetMouseY = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+      // Only apply horizontal touch drag to 3D rotation, leaving vertical gestures for buttery smooth page scrolling!
+      if (Math.abs(dx) > Math.abs(dy) * 0.7) {
+        targetTouchRotY += dx * 0.003;
+        touchStartX = curX;
+      }
+      
+      // Gentle subtle lighting shift without wild vertical model tilting
+      targetMouseX = ((curX / window.innerWidth) * 2 - 1) * 0.35;
     };
 
     const handleTouchEnd = () => {
@@ -313,23 +323,23 @@ export default function GlobalCanvas3D({
     };
     window.addEventListener('resize', handleResize);
 
-    // 8. SECTION TARGET DEFINITIONS (PERFECTLY ADAPTIVE)
-    // On mobile, the 3D model sits at y: -0.2 to -0.4 in Hero, aligned with the centered mobile 3D reticle!
+    // 8. SECTION TARGET DEFINITIONS (PERFECTLY ADAPTIVE FOR MOBILE & DESKTOP)
+    // On mobile, the 3D model stays centered (x: 0) and slightly recessed so it shines through glass cards
     const getSectionTargets = (isMob) => ({
       hero: isMob
-        ? { x: 0.0, y: -0.35, z: -0.5, scale: 0.95, rx: 0.1, ry: 0, rz: 0 }
+        ? { x: 0.0, y: 0.05, z: -1.0, scale: 0.86, rx: 0.1, ry: 0, rz: 0 }
         : { x: 2.1, y: 0.1, z: 0, scale: 1.0, rx: 0.1, ry: 0, rz: 0 },
       about: isMob
-        ? { x: 0.0, y: -0.2, z: -1.8, scale: 1.05, rx: 0.4, ry: 1.2, rz: 0.2 }
+        ? { x: 0.0, y: -0.15, z: -2.0, scale: 0.9, rx: 0.4, ry: 1.2, rz: 0.2 }
         : { x: -2.3, y: -0.3, z: -0.8, scale: 1.15, rx: 0.4, ry: 1.2, rz: 0.2 },
       stack: isMob
-        ? { x: 0.2, y: 0.3, z: -2.0, scale: 0.95, rx: -0.3, ry: 2.5, rz: -0.4 }
+        ? { x: 0.0, y: 0.15, z: -2.0, scale: 0.86, rx: -0.3, ry: 2.5, rz: -0.4 }
         : { x: 2.4, y: 0.5, z: -1.0, scale: 1.05, rx: -0.3, ry: 2.5, rz: -0.4 },
       projects: isMob
-        ? { x: -0.2, y: -0.4, z: -2.2, scale: 1.1, rx: 0.6, ry: 3.8, rz: 0.3 }
+        ? { x: 0.0, y: -0.15, z: -2.1, scale: 0.9, rx: 0.6, ry: 3.8, rz: 0.3 }
         : { x: -2.2, y: -0.5, z: -1.2, scale: 1.25, rx: 0.6, ry: 3.8, rz: 0.3 },
       contact: isMob
-        ? { x: 0.0, y: 0.2, z: -1.6, scale: 1.0, rx: 0.2, ry: 5.2, rz: -0.3 }
+        ? { x: 0.0, y: 0.1, z: -1.8, scale: 0.86, rx: 0.2, ry: 5.2, rz: -0.3 }
         : { x: 2.2, y: -0.4, z: -0.6, scale: 1.1, rx: 0.2, ry: 5.2, rz: -0.3 },
     });
 
@@ -359,6 +369,12 @@ export default function GlobalCanvas3D({
 
       scrollVelocity *= 0.92;
 
+      // Smooth touch rotation decay (prevents snapping on finger lift)
+      smoothedTouchRotX += (targetTouchRotX - smoothedTouchRotX) * 0.06;
+      smoothedTouchRotY += (targetTouchRotY - smoothedTouchRotY) * 0.06;
+      targetTouchRotX *= 0.95;
+      targetTouchRotY *= 0.96;
+
       // Update theme color
       const activeTheme = new THREE.Color(themeRef.current);
       wireMat.color.lerp(activeTheme, 0.08);
@@ -369,9 +385,6 @@ export default function GlobalCanvas3D({
       const targets = getSectionTargets(isMob);
       const currentTarget = targets[activeSectionRef.current] || targets.hero;
 
-      const touchOffsetRotY = isTouching ? touchDeltaX * 2.5 : 0;
-      const touchOffsetRotX = isTouching ? touchDeltaY * 2.5 : 0;
-
       rootGroup.position.x += (currentTarget.x + mouseX * 0.35 - rootGroup.position.x) * 0.04;
       rootGroup.position.y += (currentTarget.y + mouseY * 0.25 - rootGroup.position.y) * 0.04;
       rootGroup.position.z += (currentTarget.z - rootGroup.position.z) * 0.04;
@@ -380,8 +393,8 @@ export default function GlobalCanvas3D({
       const newScale = currentScale + (currentTarget.scale - currentScale) * 0.04;
       rootGroup.scale.set(newScale, newScale, newScale);
 
-      const targetRotX = currentTarget.rx - mouseY * 0.4 + touchOffsetRotX;
-      const targetRotY = currentTarget.ry + mouseX * 0.6 + scrollProgress * Math.PI * 2 + touchOffsetRotY;
+      const targetRotX = currentTarget.rx - mouseY * 0.35 + smoothedTouchRotX;
+      const targetRotY = currentTarget.ry + mouseX * 0.5 + scrollProgress * Math.PI * 2 + smoothedTouchRotY;
       const targetRotZ = currentTarget.rz;
 
       rootGroup.rotation.x += (targetRotX - rootGroup.rotation.x) * 0.04;
@@ -489,16 +502,16 @@ export default function GlobalCanvas3D({
         className="fixed inset-0 w-full h-full pointer-events-none z-0 opacity-85 transition-opacity duration-700"
       />
 
-      {/* Floating 3D HUD Controller (Responsive Bottom Left Dock) */}
-      <div className="fixed bottom-4 sm:bottom-6 left-3 sm:left-6 z-40 flex items-center gap-1 p-1 sm:p-1.5 rounded-full bg-surface-card/90 border border-white/10 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.85)] max-w-[calc(100vw-24px)] overflow-x-auto">
+      {/* Floating 3D HUD Controller (Responsive Floating Dock centered on mobile) */}
+      <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-6 sm:translate-x-0 z-40 flex items-center gap-1 p-1 sm:p-1.5 rounded-full bg-surface-card/95 border border-white/15 backdrop-blur-2xl shadow-[0_10px_35px_rgba(0,0,0,0.9)] max-w-[calc(100vw-20px)] overflow-x-auto scrollbar-none mb-[env(safe-area-inset-bottom)]">
         {/* Cycle Geometry Button */}
         <button
           onClick={cycleShape}
-          className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono transition-all text-neon-lime hover:bg-white/5 border border-white/10 shrink-0"
+          className="flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono transition-all text-neon-lime hover:bg-white/5 border border-neon-lime/30 shrink-0 active:scale-95"
           title="Morph 3D Geometry"
         >
-          <Shapes className="w-3 h-3" />
-          <span className="uppercase">{activeShape}</span>
+          <Shapes className="w-3 h-3 text-neon-lime" />
+          <span className="uppercase text-[10px] sm:text-xs">{activeShape}</span>
         </button>
 
         <span className="h-3 w-[1px] bg-white/10 shrink-0" />
@@ -508,7 +521,7 @@ export default function GlobalCanvas3D({
             sound.playClick();
             setVisualMode('hybrid');
           }}
-          className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 ${
+          className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 active:scale-95 ${
             visualMode === 'hybrid'
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'
@@ -524,7 +537,7 @@ export default function GlobalCanvas3D({
             sound.playClick();
             setVisualMode('wireframe');
           }}
-          className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 ${
+          className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 active:scale-95 ${
             visualMode === 'wireframe'
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'
@@ -540,7 +553,7 @@ export default function GlobalCanvas3D({
             sound.playClick();
             setVisualMode('particles');
           }}
-          className={`flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 ${
+          className={`flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-mono transition-all shrink-0 active:scale-95 ${
             visualMode === 'particles'
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'

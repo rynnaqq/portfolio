@@ -5,6 +5,19 @@ class SoundEngine {
   constructor() {
     this.ctx = null;
     this.muted = true; // muted by default for polite UX, toggleable via UI
+    this.ambientGain = null;
+    this.ambientOsc1 = null;
+    this.ambientOsc2 = null;
+    this.subscribers = new Set();
+  }
+
+  subscribe(callback) {
+    this.subscribers.add(callback);
+    return () => this.subscribers.delete(callback);
+  }
+
+  notify() {
+    this.subscribers.forEach((cb) => cb(!this.muted));
   }
 
   init() {
@@ -24,12 +37,73 @@ class SoundEngine {
     this.muted = !this.muted;
     if (!this.muted) {
       this.playBeep(880, 0.08, 'sine', 0.05);
+      this.startAmbient();
+    } else {
+      this.stopAmbient();
     }
+    this.notify();
     return this.muted;
   }
 
   isMuted() {
     return this.muted;
+  }
+
+  startAmbient() {
+    if (this.muted || !this.ctx || this.ambientGain) return;
+    try {
+      this.ambientGain = this.ctx.createGain();
+      this.ambientGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+      this.ambientGain.gain.linearRampToValueAtTime(0.012, this.ctx.currentTime + 2.0);
+
+      // Deep sub-harmonic frequency drone (Cyber Ambient)
+      this.ambientOsc1 = this.ctx.createOscillator();
+      this.ambientOsc1.type = 'sine';
+      this.ambientOsc1.frequency.setValueAtTime(55, this.ctx.currentTime); // A1 note
+
+      this.ambientOsc2 = this.ctx.createOscillator();
+      this.ambientOsc2.type = 'triangle';
+      this.ambientOsc2.frequency.setValueAtTime(110, this.ctx.currentTime); // A2 note
+
+      const filter = this.ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(180, this.ctx.currentTime);
+
+      this.ambientOsc1.connect(filter);
+      this.ambientOsc2.connect(filter);
+      filter.connect(this.ambientGain);
+      this.ambientGain.connect(this.ctx.destination);
+
+      this.ambientOsc1.start();
+      this.ambientOsc2.start();
+    } catch {
+      // Ignore if autoplay restricted
+    }
+  }
+
+  stopAmbient() {
+    if (!this.ambientGain || !this.ctx) return;
+    try {
+      this.ambientGain.gain.linearRampToValueAtTime(0.0001, this.ctx.currentTime + 0.5);
+      setTimeout(() => {
+        if (this.ambientOsc1) {
+          this.ambientOsc1.stop();
+          this.ambientOsc1.disconnect();
+          this.ambientOsc1 = null;
+        }
+        if (this.ambientOsc2) {
+          this.ambientOsc2.stop();
+          this.ambientOsc2.disconnect();
+          this.ambientOsc2 = null;
+        }
+        if (this.ambientGain) {
+          this.ambientGain.disconnect();
+          this.ambientGain = null;
+        }
+      }, 600);
+    } catch {
+      // Ignore
+    }
   }
 
   playHover() {
@@ -110,6 +184,32 @@ class SoundEngine {
         osc.start(startTime);
         osc.stop(endTime);
       });
+    } catch {
+      // Ignore
+    }
+  }
+
+  playWarp() {
+    if (this.muted) return;
+    this.init();
+    if (!this.ctx) return;
+
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(200, this.ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1600, this.ctx.currentTime + 0.3);
+
+      gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.35);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start();
+      osc.stop(this.ctx.currentTime + 0.36);
     } catch {
       // Ignore
     }

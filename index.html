@@ -3,8 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
     <meta name="theme-color" content="#08080A" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
     <title>KAELEN VANCE — Senior Creative Technologist & Full-Stack Architect</title>
     
     <!-- Premium Editorial & Cyber Typography -->
@@ -12,8 +15,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-oled text-zinc-100 selection:bg-neon-lime selection:text-black overflow-x-hidden antialiased font-sans">
-    <div id="root"></div>
+  <body class="bg-oled text-zinc-100 selection:bg-neon-lime selection:text-black overflow-x-hidden antialiased font-sans touch-manipulation">
+    <div id="root" class="overflow-x-hidden w-full min-h-screen"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

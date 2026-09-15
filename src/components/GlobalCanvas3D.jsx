@@ -1,13 +1,23 @@
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { Sparkles, Disc, Eye, Palette } from 'lucide-react';
+import { Sparkles, Disc, Eye, Shapes } from 'lucide-react';
 import { sound } from '../utils/sound';
 
-export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '#CCFF00' }) {
+export default function GlobalCanvas3D({
+  activeSection = 'hero',
+  themeAccent = '#CCFF00',
+  currentGeometry = 'icosahedron',
+  onGeometryChange,
+}) {
   const canvasRef = useRef(null);
   const [visualMode, setVisualMode] = useState('hybrid'); // 'hybrid' | 'wireframe' | 'particles'
+  const [activeShape, setActiveShape] = useState(currentGeometry);
+
   const modeRef = useRef(visualMode);
   modeRef.current = visualMode;
+
+  const shapeRef = useRef(activeShape);
+  shapeRef.current = activeShape;
 
   const themeRef = useRef(themeAccent);
   themeRef.current = themeAccent;
@@ -19,23 +29,22 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
 
-    // Detect mobile
     const isMobile = window.innerWidth < 768;
 
     // 1. SCENE, CAMERA, RENDERER
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
-      isMobile ? 55 : 45,
+      isMobile ? 52 : 45,
       window.innerWidth / window.innerHeight,
       0.1,
       100
     );
-    camera.position.set(0, 0, isMobile ? 9.5 : 8);
+    camera.position.set(0, 0, isMobile ? 9.2 : 8);
 
     const renderer = new THREE.WebGLRenderer({
       canvas,
       alpha: true,
-      antialias: !isMobile, // antialias on desktop, disabled on low-power mobile for battery & 60fps
+      antialias: !isMobile,
       powerPreference: 'high-performance',
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
@@ -49,8 +58,27 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     const sculptureGroup = new THREE.Group();
     rootGroup.add(sculptureGroup);
 
-    // A. Glossy Core Icosahedron
-    const coreGeo = new THREE.IcosahedronGeometry(isMobile ? 1.3 : 1.55, 1);
+    // GEOMETRIES DICTIONARY
+    const geometries = {
+      icosahedron: {
+        core: new THREE.IcosahedronGeometry(isMobile ? 1.3 : 1.55, 1),
+        wire: new THREE.IcosahedronGeometry(isMobile ? 1.7 : 2.0, 2),
+      },
+      torusKnot: {
+        core: new THREE.TorusKnotGeometry(isMobile ? 1.0 : 1.2, 0.32, 100, 16),
+        wire: new THREE.TorusKnotGeometry(isMobile ? 1.15 : 1.35, 0.36, 60, 12),
+      },
+      octahedron: {
+        core: new THREE.OctahedronGeometry(isMobile ? 1.4 : 1.65, 0),
+        wire: new THREE.OctahedronGeometry(isMobile ? 1.8 : 2.1, 1),
+      },
+      sphere: {
+        core: new THREE.SphereGeometry(isMobile ? 1.25 : 1.5, 32, 32),
+        wire: new THREE.SphereGeometry(isMobile ? 1.65 : 1.95, 16, 16),
+      },
+    };
+
+    // A. Glossy Core
     const coreMat = new THREE.MeshPhysicalMaterial({
       color: 0x0e0e14,
       roughness: 0.12,
@@ -60,18 +88,17 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       reflectivity: 0.95,
       wireframe: false,
     });
-    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    let coreMesh = new THREE.Mesh(geometries.icosahedron.core, coreMat);
     sculptureGroup.add(coreMesh);
 
     // B. Wireframe Cage
-    const wireGeo = new THREE.IcosahedronGeometry(isMobile ? 1.7 : 2.0, 2);
     const wireMat = new THREE.MeshBasicMaterial({
       color: new THREE.Color(themeAccent),
       wireframe: true,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.6,
     });
-    const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+    let wireMesh = new THREE.Mesh(geometries.icosahedron.wire, wireMat);
     sculptureGroup.add(wireMesh);
 
     // C. Gyroscopic Cyber Orbital Rings
@@ -107,7 +134,7 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
 
     // 4. SATELLITE 3D SHAPES
     const satellites = [];
-    const satelliteCount = isMobile ? 8 : 14;
+    const satelliteCount = isMobile ? 7 : 14;
     const satelliteGeos = [
       new THREE.OctahedronGeometry(0.35, 0),
       new THREE.TetrahedronGeometry(0.4, 0),
@@ -150,10 +177,11 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       satellites.push(mesh);
     }
 
-    // 5. DEEP SPACE PARTICLE CONSTELLATION & DYNAMIC PLEXUS
+    // 5. DEEP SPACE PARTICLE CONSTELLATION
     const particleCount = isMobile ? 550 : 1000;
     const particleGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
+    const originalPositions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
     const cAccent = new THREE.Color(themeAccent);
@@ -163,9 +191,17 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     const cWhite = new THREE.Color(0xffffff);
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 26;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 20;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 18;
+      const px = (Math.random() - 0.5) * 26;
+      const py = (Math.random() - 0.5) * 20;
+      const pz = (Math.random() - 0.5) * 18;
+
+      positions[i * 3] = px;
+      positions[i * 3 + 1] = py;
+      positions[i * 3 + 2] = pz;
+
+      originalPositions[i * 3] = px;
+      originalPositions[i * 3 + 1] = py;
+      originalPositions[i * 3 + 2] = pz;
 
       const rand = Math.random();
       const col = rand > 0.75 ? cAccent : rand > 0.55 ? cPurple : rand > 0.35 ? cCyan : rand > 0.15 ? cBlue : cWhite;
@@ -188,7 +224,7 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     scene.add(particleSystem);
 
     // 6. LIGHTS
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     scene.add(ambientLight);
 
     const accentLight = new THREE.PointLight(new THREE.Color(themeAccent), 5, 20);
@@ -264,29 +300,30 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     window.addEventListener('touchend', handleTouchEnd);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Handle Window Resize & Orientation Change
+    // Handle Window Resize
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
       const mobileNow = width < 768;
-      camera.fov = mobileNow ? 55 : 45;
-      camera.position.z = mobileNow ? 9.5 : 8;
+      camera.fov = mobileNow ? 52 : 45;
+      camera.position.z = mobileNow ? 9.2 : 8;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     };
     window.addEventListener('resize', handleResize);
 
-    // 8. SECTION TARGET DEFINITIONS (ADAPTIVE FOR MOBILE & DESKTOP)
+    // 8. SECTION TARGET DEFINITIONS (PERFECTLY ADAPTIVE)
+    // On mobile, the 3D model sits at y: -0.2 to -0.4 in Hero, aligned with the centered mobile 3D reticle!
     const getSectionTargets = (isMob) => ({
       hero: isMob
-        ? { x: 0.0, y: 0.6, z: -1.2, scale: 0.9, rx: 0.1, ry: 0, rz: 0 }
+        ? { x: 0.0, y: -0.35, z: -0.5, scale: 0.95, rx: 0.1, ry: 0, rz: 0 }
         : { x: 2.1, y: 0.1, z: 0, scale: 1.0, rx: 0.1, ry: 0, rz: 0 },
       about: isMob
         ? { x: 0.0, y: -0.2, z: -1.8, scale: 1.05, rx: 0.4, ry: 1.2, rz: 0.2 }
         : { x: -2.3, y: -0.3, z: -0.8, scale: 1.15, rx: 0.4, ry: 1.2, rz: 0.2 },
       stack: isMob
-        ? { x: 0.2, y: 0.4, z: -2.0, scale: 0.95, rx: -0.3, ry: 2.5, rz: -0.4 }
+        ? { x: 0.2, y: 0.3, z: -2.0, scale: 0.95, rx: -0.3, ry: 2.5, rz: -0.4 }
         : { x: 2.4, y: 0.5, z: -1.0, scale: 1.05, rx: -0.3, ry: 2.5, rz: -0.4 },
       projects: isMob
         ? { x: -0.2, y: -0.4, z: -2.2, scale: 1.1, rx: 0.6, ry: 3.8, rz: 0.3 }
@@ -296,23 +333,33 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
         : { x: 2.2, y: -0.4, z: -0.6, scale: 1.1, rx: 0.2, ry: 5.2, rz: -0.3 },
     });
 
+    let previousShape = shapeRef.current;
+
     // 9. ANIMATION LOOP
     let animId;
     let clock = new THREE.Clock();
 
     const animate = () => {
       animId = requestAnimationFrame(animate);
-
       const elapsed = clock.getElapsedTime();
+
+      // Check if shape changed
+      if (shapeRef.current !== previousShape) {
+        previousShape = shapeRef.current;
+        const newGeo = geometries[previousShape] || geometries.icosahedron;
+        coreMesh.geometry.dispose();
+        wireMesh.geometry.dispose();
+        coreMesh.geometry = newGeo.core;
+        wireMesh.geometry = newGeo.wire;
+      }
 
       // Smooth mouse lerp
       mouseX += (targetMouseX - mouseX) * 0.05;
       mouseY += (targetMouseY - mouseY) * 0.05;
 
-      // Scroll velocity dampening
       scrollVelocity *= 0.92;
 
-      // Update theme color if changed dynamically
+      // Update theme color
       const activeTheme = new THREE.Color(themeRef.current);
       wireMat.color.lerp(activeTheme, 0.08);
       ring3Mat.color.lerp(activeTheme, 0.08);
@@ -322,9 +369,8 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       const targets = getSectionTargets(isMob);
       const currentTarget = targets[activeSectionRef.current] || targets.hero;
 
-      // Smoothly interpolate rootGroup position and rotation to section targets
-      const touchOffsetRotY = isTouching ? touchDeltaX * 2 : 0;
-      const touchOffsetRotX = isTouching ? touchDeltaY * 2 : 0;
+      const touchOffsetRotY = isTouching ? touchDeltaX * 2.5 : 0;
+      const touchOffsetRotX = isTouching ? touchDeltaY * 2.5 : 0;
 
       rootGroup.position.x += (currentTarget.x + mouseX * 0.35 - rootGroup.position.x) * 0.04;
       rootGroup.position.y += (currentTarget.y + mouseY * 0.25 - rootGroup.position.y) * 0.04;
@@ -334,7 +380,6 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       const newScale = currentScale + (currentTarget.scale - currentScale) * 0.04;
       rootGroup.scale.set(newScale, newScale, newScale);
 
-      // Section target rotation + continuous idle rotation + mouse parallax + touch
       const targetRotX = currentTarget.rx - mouseY * 0.4 + touchOffsetRotX;
       const targetRotY = currentTarget.ry + mouseX * 0.6 + scrollProgress * Math.PI * 2 + touchOffsetRotY;
       const targetRotZ = currentTarget.rz;
@@ -343,7 +388,6 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       rootGroup.rotation.y += (targetRotY - rootGroup.rotation.y) * 0.04;
       rootGroup.rotation.z += (targetRotZ - rootGroup.rotation.z) * 0.04;
 
-      // Internal sculpture continuous autonomous motion
       coreMesh.rotation.y += 0.006;
       coreMesh.rotation.x += 0.004;
 
@@ -354,11 +398,9 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       ring2.rotation.z -= 0.007;
       ring3.rotation.y += 0.012;
 
-      // Breathing pulse on wireframe
       const pulse = Math.sin(elapsed * 2.5) * 0.05 + 1;
       wireMesh.scale.set(pulse, pulse, pulse);
 
-      // Orbiting satellite shapes
       satellites.forEach((sat) => {
         sat.userData.angle += sat.userData.speed;
         sat.position.x = Math.cos(sat.userData.angle) * sat.userData.radius;
@@ -369,7 +411,6 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
         sat.rotation.y += sat.userData.rotSpeedY;
       });
 
-      // Ambient particle slow drifting + warp velocity
       particleSystem.rotation.y += 0.0008;
       particleSystem.position.z = scrollVelocity * 5;
 
@@ -412,9 +453,11 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('resize', handleResize);
       renderer.dispose();
-      coreGeo.dispose();
+      Object.values(geometries).forEach((g) => {
+        g.core.dispose();
+        g.wire.dispose();
+      });
       coreMat.dispose();
-      wireGeo.dispose();
       wireMat.dispose();
       ring1Geo.dispose();
       ring1Mat.dispose();
@@ -429,6 +472,15 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
     };
   }, []);
 
+  const cycleShape = () => {
+    sound.playClick();
+    const shapes = ['icosahedron', 'torusKnot', 'octahedron', 'sphere'];
+    const nextIdx = (shapes.indexOf(activeShape) + 1) % shapes.length;
+    const nextShape = shapes[nextIdx];
+    setActiveShape(nextShape);
+    if (onGeometryChange) onGeometryChange(nextShape);
+  };
+
   return (
     <>
       {/* Fixed Fullscreen 3D Spatial Canvas */}
@@ -438,11 +490,18 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
       />
 
       {/* Floating 3D HUD Controller (Responsive Bottom Left Dock) */}
-      <div className="fixed bottom-4 sm:bottom-6 left-3 sm:left-6 z-40 flex items-center gap-1 p-1 sm:p-1.5 rounded-full bg-surface-card/90 border border-white/10 backdrop-blur-xl shadow-[0_10px_30px_rgba(0,0,0,0.85)] max-w-[calc(100vw-24px)] overflow-x-auto">
-        <div className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1 text-[10px] sm:text-[11px] font-mono text-zinc-400 border-r border-white/10 shrink-0">
-          <span className="w-2 h-2 rounded-full bg-neon-lime animate-ping" />
-          <span className="hidden xs:inline">3D HUD</span>
-        </div>
+      <div className="fixed bottom-4 sm:bottom-6 left-3 sm:left-6 z-40 flex items-center gap-1 p-1 sm:p-1.5 rounded-full bg-surface-card/90 border border-white/10 backdrop-blur-xl shadow-[0_10px_35px_rgba(0,0,0,0.85)] max-w-[calc(100vw-24px)] overflow-x-auto">
+        {/* Cycle Geometry Button */}
+        <button
+          onClick={cycleShape}
+          className="flex items-center gap-1 px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono transition-all text-neon-lime hover:bg-white/5 border border-white/10 shrink-0"
+          title="Morph 3D Geometry"
+        >
+          <Shapes className="w-3 h-3" />
+          <span className="uppercase">{activeShape}</span>
+        </button>
+
+        <span className="h-3 w-[1px] bg-white/10 shrink-0" />
 
         <button
           onClick={() => {
@@ -454,7 +513,7 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'
           }`}
-          title="Hybrid Mode (Glossy + Wireframe + Particles)"
+          title="Hybrid Mode"
         >
           <Sparkles className="w-3 h-3" />
           <span>HYBRID</span>
@@ -470,7 +529,7 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'
           }`}
-          title="Wireframe Matrix Mode"
+          title="Wireframe Mesh Mode"
         >
           <Disc className="w-3 h-3" />
           <span>MESH</span>
@@ -486,7 +545,7 @@ export default function GlobalCanvas3D({ activeSection = 'hero', themeAccent = '
               ? 'bg-neon-lime text-black font-bold shadow-neon-lime'
               : 'text-zinc-400 hover:text-white'
           }`}
-          title="Cosmic Particles Mode"
+          title="Fluid Particles Mode"
         >
           <Eye className="w-3 h-3" />
           <span>FLUID</span>

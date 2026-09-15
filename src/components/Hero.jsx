@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowDownRight, Terminal, Sparkles, Code2, Globe, Orbit } from 'lucide-react';
+import { ArrowDownRight, Terminal, Sparkles, Code2, Globe, Orbit, Shapes } from 'lucide-react';
 import Magnetic from './Magnetic';
 import TextScramble from './TextScramble';
 import { sound } from '../utils/sound';
 
-export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
+export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00', currentGeometry, onGeometryChange }) {
   const [timeString, setTimeString] = useState('');
   const [telemetry, setTelemetry] = useState({ x: 2.0, y: 0.1, rot: 0 });
 
@@ -47,16 +47,23 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
     }
   };
 
+  const shapes = ['icosahedron', 'torusKnot', 'octahedron', 'sphere'];
+  const cycleShape = () => {
+    sound.playClick();
+    const nextIdx = (shapes.indexOf(currentGeometry || 'icosahedron') + 1) % shapes.length;
+    if (onGeometryChange) onGeometryChange(shapes[nextIdx]);
+  };
+
   return (
-    <section id="hero" className="relative min-h-[92vh] sm:min-h-screen pt-24 sm:pt-28 pb-10 sm:pb-16 flex flex-col justify-between overflow-hidden">
+    <section id="hero" className="relative min-h-[92vh] sm:min-h-screen pt-20 sm:pt-28 pb-10 sm:pb-16 flex flex-col justify-between overflow-hidden">
       {/* Background Ambient Glows */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] sm:w-[800px] h-[400px] sm:h-[500px] bg-gradient-to-b from-neon-purple/20 via-neon-blue/10 to-transparent blur-[120px] sm:blur-[140px] rounded-full opacity-70" />
-      <div className="pointer-events-none absolute top-1/3 -left-40 w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-neon-lime/10 blur-[100px] sm:blur-[130px] rounded-full" />
-      <div className="pointer-events-none absolute bottom-10 right-0 w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-neon-blue/10 blur-[120px] sm:blur-[150px] rounded-full" />
+      <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[550px] sm:w-[800px] h-[400px] sm:h-[500px] bg-gradient-to-b from-neon-purple/20 via-neon-blue/10 to-transparent blur-[120px] sm:blur-[140px] rounded-full opacity-70" />
+      <div className="pointer-events-none absolute top-1/3 -left-40 w-[280px] sm:w-[450px] h-[280px] sm:h-[450px] bg-neon-lime/10 blur-[100px] sm:blur-[130px] rounded-full" />
+      <div className="pointer-events-none absolute bottom-10 right-0 w-[320px] sm:w-[500px] h-[320px] sm:h-[500px] bg-neon-blue/10 blur-[120px] sm:blur-[150px] rounded-full" />
 
       {/* Hero Header & Identity */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 z-10">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-4 sm:pb-6 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-b border-white/10 pb-3.5 sm:pb-6 mb-5 sm:mb-8">
           {/* Status Indicator */}
           <div className="flex items-center gap-2 sm:gap-3">
             <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
@@ -80,9 +87,9 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
         </div>
 
         {/* Main Headline & 3D Stage Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[420px] sm:min-h-[500px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center min-h-[420px] sm:min-h-[500px]">
           {/* Left Column: Kinetic Typography & CTAs */}
-          <div className="lg:col-span-7 flex flex-col justify-center space-y-5 sm:space-y-6">
+          <div className="lg:col-span-7 flex flex-col justify-center space-y-4 sm:space-y-6">
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -165,9 +172,9 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
           </div>
 
           {/* Right Column: Spatial 3D HUD Reticle & Interactive Telemetry */}
-          <div className="lg:col-span-5 relative h-[220px] xs:h-[280px] sm:h-[400px] lg:h-[480px] flex items-center justify-center pointer-events-none">
-            {/* Ethereal Circular Targeting HUD (Hidden or compact on small mobile) */}
-            <div className="relative w-48 h-48 xs:w-64 xs:h-64 sm:w-80 sm:h-80 rounded-full border border-white/10 flex items-center justify-center animate-spin-slow">
+          <div className="lg:col-span-5 relative h-[260px] xs:h-[300px] sm:h-[400px] lg:h-[480px] flex items-center justify-center pointer-events-none">
+            {/* Ethereal Circular Targeting HUD */}
+            <div className="relative w-52 h-52 xs:w-64 xs:h-64 sm:w-80 sm:h-80 rounded-full border border-white/10 flex items-center justify-center animate-spin-slow">
               <div className="absolute inset-2 rounded-full border border-dashed border-white/15" />
               <div className="absolute inset-6 sm:inset-8 rounded-full border border-neon-lime/20" />
               
@@ -184,9 +191,14 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
                 <Orbit className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-neon-lime animate-spin" />
                 <span>ROT: {telemetry.rot}°</span>
               </div>
-              <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-white/10 text-zinc-400 hidden xs:block">
-                <span>VEC: [{telemetry.x}, {telemetry.y}]</span>
-              </div>
+              <button
+                onClick={cycleShape}
+                className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-surface-card/85 backdrop-blur-md border border-neon-lime/30 text-neon-lime flex items-center gap-1.5 hover:bg-neon-lime hover:text-black transition-all"
+                title="Morph 3D Model Shape"
+              >
+                <Shapes className="w-3 h-3" />
+                <span className="uppercase text-[9px] sm:text-[10px]">MORPH SHAPE</span>
+              </button>
             </div>
 
             <div className="absolute bottom-2 sm:bottom-6 left-2 sm:left-6 pointer-events-auto">
@@ -200,7 +212,7 @@ export default function Hero({ onOpenTerminal, themeAccent = '#CCFF00' }) {
       </div>
 
       {/* Bottom Kinetic Marquee Strip */}
-      <div className="w-full mt-8 sm:mt-12 border-y border-white/10 py-2.5 sm:py-3 bg-surface-card/40 backdrop-blur-md overflow-hidden flex whitespace-nowrap z-10">
+      <div className="w-full mt-6 sm:mt-12 border-y border-white/10 py-2.5 sm:py-3 bg-surface-card/40 backdrop-blur-md overflow-hidden flex whitespace-nowrap z-10">
         <div className="flex items-center gap-6 sm:gap-8 animate-marquee text-[11px] sm:text-xs font-mono text-zinc-400 tracking-widest uppercase">
           <span className="flex items-center gap-2 text-white">
             <Code2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-neon-lime" /> REACT 19 & NEXT.JS ARCHITECTURE

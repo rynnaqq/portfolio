@@ -8,10 +8,13 @@ import TerminalContact from './components/TerminalContact';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import GlobalCanvas3D from './components/GlobalCanvas3D';
+import CyberPreloader from './components/CyberPreloader';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('hero');
   const [themeAccent, setThemeAccent] = useState('#CCFF00');
+  const [currentGeometry, setCurrentGeometry] = useState('icosahedron');
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Dynamically inject theme CSS variable into root
   useEffect(() => {
@@ -54,6 +57,9 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen bg-oled text-zinc-100 font-sans selection:bg-neon-lime selection:text-black w-full overflow-x-hidden">
+      {/* Cyber Preloader Sequence */}
+      <CyberPreloader onComplete={() => setIsLoaded(true)} />
+
       {/* Precision Custom Cursor */}
       <CustomCursor />
 
@@ -62,7 +68,12 @@ export default function App() {
       <div className="fixed inset-0 pointer-events-none bg-noise opacity-25 z-0" />
 
       {/* Persistent Global 3D Spatial Environment (Integrates 3D Shapes Across All Pages) */}
-      <GlobalCanvas3D activeSection={activeSection} themeAccent={themeAccent} />
+      <GlobalCanvas3D
+        activeSection={activeSection}
+        themeAccent={themeAccent}
+        currentGeometry={currentGeometry}
+        onGeometryChange={setCurrentGeometry}
+      />
 
       {/* Navigation */}
       <Navbar
@@ -74,7 +85,12 @@ export default function App() {
 
       {/* Main Content Layout with 3D Spatial Depth */}
       <main className="relative z-10 flex flex-col w-full">
-        <Hero onOpenTerminal={handleOpenTerminal} themeAccent={themeAccent} />
+        <Hero
+          onOpenTerminal={handleOpenTerminal}
+          themeAccent={themeAccent}
+          currentGeometry={currentGeometry}
+          onGeometryChange={setCurrentGeometry}
+        />
         <About />
         <TechStack />
         <Projects />
